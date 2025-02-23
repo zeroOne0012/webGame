@@ -25,7 +25,7 @@ let entities = {};
 
 let platforms = [
     new Platform(100, 200, 100, 100),
-    new Platform(300, 250, 100, 100),
+    new Platform(0, 0, 150, 150),
     new Platform(250, 300, 100, 100)
 ];
 
@@ -109,8 +109,9 @@ function createSocket(){
             const y= Math.floor(Math.random() * 600);
             const color= `hsl(${Math.random() * 360}, 100%, 50%)`; // 랜덤 색상
             players[socket.id] = new Player(socket.id, x,y,color, msg.nickname);
-            // console.log(players);
+            socket.emit('updateFlatforms',platforms);
             
+            // console.log(players);
         });
     });
 
@@ -147,6 +148,7 @@ function createSocket(){
         // });
 
         io.emit('updatePlayers', playerData); // 모든 플레이어 정보 전송
+
     }, 15); // 50ms 간격 (1초 = 1000ms)
     
     server.listen(process.env.SOCKET_PORT, ()=>{});

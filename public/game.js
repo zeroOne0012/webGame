@@ -25,7 +25,7 @@ socket.on("gameover", () => {
     showGameOverModal();
 });
 
-
+let platforms;
 let nickname;
 /////////////////////////////
 // 모달 생성 함수 (HTML 요소 직접 생성)
@@ -114,10 +114,19 @@ socket.on("updatePlayers", (players) => { // EventLoop
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
     ctx.fillRect(0,floor,3000,3000); /////////////// 바닥
+    platforms.forEach(pl=>{
+        ctx.fillRect(pl.x, pl.y, pl.width, pl.height);
+    });
+    
     // 화면에 플레이어 상태 업데이트
     players.forEach(player=>{
         drawPlayer(player);
     });
+});
+
+socket.on("updateFlatforms", (pls)=>{
+    platforms = pls;
+
 });
 
 
