@@ -115,7 +115,7 @@ function createSocket(){
         });
     });
 
-    setInterval(() => {
+    setInterval(() => { // 이벤트 루프
         Object.values(players).forEach(p => {
             if (p.keys["ArrowLeft"]) {
                 p.dx = -p.speed;
@@ -126,7 +126,7 @@ function createSocket(){
                 p.dir = 1;
             }
             else p.dx = 0;
-            p.update();
+            p.update(platforms);
         });
 
         playerData = Object.values(players).map(p=>({
