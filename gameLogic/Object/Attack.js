@@ -1,9 +1,13 @@
+const config = require('../config.js');
+
 class Attack{
 
     constructor(){
         this.attacking = false;
         this.attackFrame = -1;
         this.attackRange = 50;
+        this.coolTime = config.attackCool; // -1 ~ 30
+        
 
 
         this.x=0;

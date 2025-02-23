@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
 require("dotenv").config();
+const config = require('./gameLogic/config');
 const Player = require('./gameLogic/Object/player');
+
+const Platform = require('./gameLogic/Object/Platform');
 
 const AABB = require('./gameLogic/AABB');
 
@@ -19,6 +22,12 @@ const io = new Server(server, {
 
 let players = {};
 let entities = {};
+
+let platforms = [
+    new Platform(100, 200, 100, 100),
+    new Platform(300, 250, 100, 100),
+    new Platform(250, 300, 100, 100)
+];
 
 function createSocket(){
     io.on('connection', (socket) => {
@@ -41,7 +50,7 @@ function createSocket(){
                         players[socket.id].onGround = false;
                     }
                 }
-                if (k === "a" && !players[socket.id].attack.attacking) {
+                if (k === "a" && !players[socket.id].attack.attacking && players[socket.id].attack.coolTime==config.attackCool) {
                     players[socket.id].attack.attacking = true;
                     players[socket.id].update(); // 분리하면 빼도 될 듯한 코드 (0,0,50,50)
                     Object.values(players).forEach(player => {
@@ -99,7 +108,7 @@ function createSocket(){
             const x= Math.floor(Math.random() * 800); // 랜덤 위치
             const y= Math.floor(Math.random() * 600);
             const color= `hsl(${Math.random() * 360}, 100%, 50%)`; // 랜덤 색상
-            players[socket.id] = new Player(socket.id, x,y,color);
+            players[socket.id] = new Player(socket.id, x,y,color, msg.nickname);
             // console.log(players);
             
         });
@@ -129,9 +138,10 @@ function createSocket(){
                 health: p.health,
                 maxHealth: p.maxHealth,
                 dir: 1, // 오른쪽
-                attack: p.attack
+                attack: p.attack,
+                nickname: p.nickname
             }
-        ))
+        ));
         // playerData.forEach(p=>{
         //     console.log(p.x, p.y);
         // });

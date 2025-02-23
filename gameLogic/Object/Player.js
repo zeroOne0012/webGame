@@ -2,9 +2,9 @@
 
 
 const Attack = require('./attack.js');
-const config = require('./config.js');
+const config = require('../config.js');
 class Player {
-    constructor(id, x, y, color) {
+    constructor(id, x, y, color, nickname) {
         this.id = id;
 
         this.x = x;
@@ -18,6 +18,8 @@ class Player {
         this.dy = 0;
         this.onGround = false;
         this.dir = 1; // 오른쪽
+
+        this.nickname = nickname;
 
         this.speed = 5;
         this.jumpPower = -10;
@@ -42,10 +44,18 @@ class Player {
             this.dy = 0;
             this.onGround = true;
         }
+
+        
+
+        // atack 쿨타임
+        if (this.attack.coolTime!=config.attackCool){
+            this.attack.coolTime++;
+        }
         
         // 공격
         if (this.attack.attacking) {
             if(this.attack.attackFrame === -1){ // 초기 공격 위치 설정
+                this.attack.coolTime=-1;
                 if (this.dir===1) this.attack.update(this.x + this.width, this.y);
                 else this.attack.update(this.x-this.width, this.y);
             }
